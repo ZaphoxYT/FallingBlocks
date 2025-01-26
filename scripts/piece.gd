@@ -1,7 +1,6 @@
 class_name Piece
 extends Node2D
 
-const BLOCK_SIZE = 32
 const PALLETE = preload("res://assets/sprites/pallete.png")
 const SHAPES = {
 	"I": [Vector2(-1, 0), Vector2(0, 0), Vector2(1, 0), Vector2(2, 0)],
@@ -23,72 +22,90 @@ const COLORS = {
 	"Z": 6
 }
 
+const GENERAL_KICK_OFFSETS = [
+	Vector2(0, 0),   # No offset
+	Vector2(1, 0),   # Kick right
+	Vector2(-1, 0),  # Kick left
+	Vector2(0, 1),   # Kick down
+	Vector2(0, -1)   # Kick up
+]
+
+const I_KICK_OFFSETS = {
+	"clockwise": [
+		[Vector2(0, 0), Vector2(-2, 0), Vector2(1, 0), Vector2(-2, -1), Vector2(1, 2)],
+		[Vector2(0, 0), Vector2(-1, 0), Vector2(2, 0), Vector2(-1, 2), Vector2(2, -1)],
+		[Vector2(0, 0), Vector2(2, 0), Vector2(-1, 0), Vector2(2, 1), Vector2(-1, -2)],
+		[Vector2(0, 0), Vector2(1, 0), Vector2(-2, 0), Vector2(1, -2), Vector2(-2, 1)]
+	],
+	"counterclockwise": [
+		[Vector2(0, 0), Vector2(-1, 0), Vector2(2, 0), Vector2(-1, 2), Vector2(2, -1)],
+		[Vector2(0, 0), Vector2(2, 0), Vector2(-1, 0), Vector2(2, 1), Vector2(-1, -2)],
+		[Vector2(0, 0), Vector2(1, 0), Vector2(-2, 0), Vector2(1, -2), Vector2(-2, 1)],
+		[Vector2(0, 0), Vector2(-2, 0), Vector2(1, 0), Vector2(-2, -1), Vector2(1, 2)]
+	]
+}
+
+const OFFSET = Vector2(16,16)
+const BLOCK_SCENE = preload("res://scenes/block.tscn")
 var blocks: Array[Sprite2D] = []
-var my_shape: String = ""
-var speed: float = 1.0  # Speed of automatic falling
+var piece_name: String = ""
 var fall_timer: float = 0.0  # Timer to track automatic falling
 
-func initialize(shape_name: String):
+func initialize(_shape_name: String):
 	for block in blocks:
 		block.queue_free()
 	blocks.clear()
 
-	if not SHAPES.has(shape_name):
-		print("Invalid shape name:", shape_name)
-		return
+	if not SHAPES.has(_shape_name):
+		push_error("Invalid shape name:", _shape_name)
+		assert(false)
 
-	my_shape = shape_name
+	piece_name = _shape_name
 
-	for pos in SHAPES[shape_name]:
-		var block = Sprite2D.new()
+	for pos in SHAPES[_shape_name]:
+		var block = BLOCK_SCENE.instantiate()
+		block.block_freed.connect(check_empty_and_free)
 		block.texture = PALLETE
+		block.offset = Vector2(Globals.BLOCK_SIZE/2, Globals.BLOCK_SIZE/2)
 		block.region_enabled = true
-		block.region_rect = Rect2(COLORS[shape_name] * BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE)
-		block.position = pos * BLOCK_SIZE
+		block.region_rect = Rect2(COLORS[_shape_name] * Globals.BLOCK_SIZE, 0, Globals.BLOCK_SIZE, Globals.BLOCK_SIZE)
+		block.position = (pos * Globals.BLOCK_SIZE)
 		add_child(block)
 		blocks.append(block)
 
-func rotate_piece():
-	if my_shape == "O":
+func rotate_clockwise():
+	if piece_name == "O":
 		return
 	for block in blocks:
-		var new_position = Vector2(-block.position.y / BLOCK_SIZE, block.position.x / BLOCK_SIZE)
-		block.position = new_position * BLOCK_SIZE
+		var new_position = Vector2(-block.position.y / Globals.BLOCK_SIZE, block.position.x / Globals.BLOCK_SIZE)
+		block.position = new_position * Globals.BLOCK_SIZE
+
+func rotate_counterclockwise():
+	if piece_name == "O":
+		return
+	for block in blocks:
+		var new_position = Vector2(block.position.y / Globals.BLOCK_SIZE, -block.position.x / Globals.BLOCK_SIZE)
+		block.position = new_position * Globals.BLOCK_SIZE
 
 func move_left():
-	for block in blocks:
-		block.position.x -= BLOCK_SIZE
+	position.x -= Globals.BLOCK_SIZE
+	#for block in blocks:
+		#block.position.x -= Globals.BLOCK_SIZE
+
 
 func move_right():
-	for block in blocks:
-		block.position.x += BLOCK_SIZE
+	position.y += Globals.BLOCK_SIZE
+	#for block in blocks:
+		#block.position.x += Globals.BLOCK_SIZE
 
 func fall(delta: float):
 	fall_timer += delta
-	if fall_timer >= speed:
-		for block in blocks:
-			block.position.y += BLOCK_SIZE
+	if fall_timer >= Globals.falling_speed:
+		position.y += Globals.BLOCK_SIZE
+		#for block in blocks:
+			#block.position.y += Globals.BLOCK_SIZE
 		fall_timer = 0.0
 
-func _ready():
-	# for testing
-	initialize("O")
-	position = Vector2(200,50)
-
-func _process(delta):
-	if Input.is_action_just_pressed("rotate_piece"):
-		rotate_piece()
-
-	if Input.is_action_just_pressed("ui_left"):
-		move_left()
-
-	if Input.is_action_just_pressed("ui_right"):
-		move_right()
-
-	if Input.is_action_pressed("ui_down"):
-		speed = 0.5
-	else:
-		speed = 1.0
-
-	# Handle automatic falling
-	fall(delta)
+func check_empty_and_free():
+	if get_child_count() == 0:
+		queue_free()

@@ -11,8 +11,18 @@ config_version=5
 [application]
 
 config/name="FallingBlocks"
+run/main_scene="res://scenes/game.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Globals="*res://scripts/globals.gd"
+
+[display]
+
+window/size/viewport_width=1120
+window/size/viewport_height=840
 
 [input]
 
