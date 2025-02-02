@@ -5,6 +5,7 @@ const BLOCK_SIZE = 32
 @onready var grid:Grid = $Grid
 @onready var spawn_point = grid.spawn_point
 @onready var piece_selector: PieceSelector = $PieceSelector
+@onready var debug_menu: Control = $DebugMenu
 
 var current_piece: Piece = null
 var fall_timer: float = 0.0
@@ -32,6 +33,9 @@ func _process(delta):
 				placing_timer = 0.0
 
 func handle_inputs(delta):
+	if Input.is_action_just_pressed("debug"):
+		debug_menu.visible = !debug_menu.visible
+
 	if Input.is_action_just_pressed("ui_left") and grid.can_move(current_piece, Vector2.LEFT):
 		current_piece.position.x -= BLOCK_SIZE
 

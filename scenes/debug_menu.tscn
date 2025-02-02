@@ -1,0 +1,102 @@
+[gd_scene load_steps=2 format=3 uid="uid://bw7rve426e03t"]
+
+[ext_resource type="Script" path="res://scripts/debug_menu.gd" id="1_nni7s"]
+
+[node name="DebugMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_nni7s")
+
+[node name="BoxContainer" type="BoxContainer" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 65.0
+offset_right = 309.0
+offset_bottom = 391.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="BoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="DebugMode" type="CheckBox" parent="BoxContainer/HBoxContainer/VBoxContainer" groups=["Buttons"]]
+layout_mode = 2
+focus_mode = 1
+
+[node name="I" type="CheckBox" parent="BoxContainer/HBoxContainer/VBoxContainer" groups=["Buttons"]]
+layout_mode = 2
+focus_mode = 1
+button_pressed = true
+
+[node name="O" type="CheckBox" parent="BoxContainer/HBoxContainer/VBoxContainer" groups=["Buttons"]]
+layout_mode = 2
+focus_mode = 1
+
+[node name="T" type="CheckBox" parent="BoxContainer/HBoxContainer/VBoxContainer" groups=["Buttons"]]
+layout_mode = 2
+focus_mode = 1
+
+[node name="L" type="CheckBox" parent="BoxContainer/HBoxContainer/VBoxContainer" groups=["Buttons"]]
+layout_mode = 2
+focus_mode = 1
+
+[node name="J" type="CheckBox" parent="BoxContainer/HBoxContainer/VBoxContainer" groups=["Buttons"]]
+layout_mode = 2
+focus_mode = 1
+
+[node name="S" type="CheckBox" parent="BoxContainer/HBoxContainer/VBoxContainer" groups=["Buttons"]]
+layout_mode = 2
+focus_mode = 1
+
+[node name="Z" type="CheckBox" parent="BoxContainer/HBoxContainer/VBoxContainer" groups=["Buttons"]]
+layout_mode = 2
+focus_mode = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="BoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="DebugLabel" type="Label" parent="BoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Debug Mode"
+
+[node name="I" type="Label" parent="BoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "I"
+
+[node name="O" type="Label" parent="BoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "O"
+
+[node name="T" type="Label" parent="BoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "T"
+
+[node name="L" type="Label" parent="BoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "L"
+
+[node name="J" type="Label" parent="BoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "J"
+
+[node name="S" type="Label" parent="BoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "S"
+
+[node name="Z" type="Label" parent="BoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Z"
+
+[connection signal="toggled" from="BoxContainer/HBoxContainer/VBoxContainer/DebugMode" to="." method="_on_debug_mode_toggled"]
+[connection signal="toggled" from="BoxContainer/HBoxContainer/VBoxContainer/I" to="." method="_on_i_toggled"]
+[connection signal="toggled" from="BoxContainer/HBoxContainer/VBoxContainer/O" to="." method="_on_o_toggled"]
+[connection signal="toggled" from="BoxContainer/HBoxContainer/VBoxContainer/T" to="." method="_on_t_toggled"]
+[connection signal="toggled" from="BoxContainer/HBoxContainer/VBoxContainer/L" to="." method="_on_l_toggled"]
+[connection signal="toggled" from="BoxContainer/HBoxContainer/VBoxContainer/J" to="." method="_on_j_toggled"]
+[connection signal="toggled" from="BoxContainer/HBoxContainer/VBoxContainer/S" to="." method="_on_s_toggled"]
+[connection signal="toggled" from="BoxContainer/HBoxContainer/VBoxContainer/Z" to="." method="_on_z_toggled"]
